@@ -798,8 +798,9 @@ func Module() {
 		if OSS.Error == false {
 			fmt.Println("Compile successful")
 			OSG.Close()
-			OSG.Dump(OSG.Pc)
+			//OSG.Dump(OSG.Pc)
 			OSG.Decode()
+            OSG.Load()
 		}
 	} else {
 		OSS.Mark("Module: MODULE expected")

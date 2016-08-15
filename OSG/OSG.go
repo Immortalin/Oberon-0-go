@@ -7,14 +7,14 @@ package OSG
 
 import (
 	"OSS"
+    "RISC"
 	"fmt"
 )
 
 const (
-	maxCode     = 1000
+	maxCode     = 100
 	maxRel      = 200
 	nofCom      = 16
-	RISCMemSize = 1024
 )
 
 // Class/mode
@@ -40,6 +40,7 @@ const (
 )
 
 // Mnemonics
+// Not sure why these are not imported from RISC
 const (
 	MOV  = 0
 	MVN  = 1
@@ -140,12 +141,12 @@ func put(op, a, b, c int) {
 	if op >= 32 {
 		op -= 64
 	}
-	code[Pc] = ((op*16+a)*16+b)*0x40000 + c%0x40000
+	code[Pc] = ((op*16+a)*16+b)*0x40000 + (c%0x40000)
 	Pc += 1
 }
 
 func putBR(op, disp int) {
-	code[Pc] = (op-0x40)*0x4000000 + disp%0x4000000
+	code[Pc] = (op-0x40)*0x4000000 + (disp%0x4000000)
 	Pc += 1
 }
 
@@ -529,7 +530,7 @@ func IOCall(x *Item, y *Item) {
 
 func Header(size int) {
 	entry = Pc
-	put(MOVI, SP, 0, RISCMemSize-size)
+	put(MOVI, SP, 0, RISC.MemSize-size)
 	put(PSH, LNK, SP, 4)
 }
 
@@ -548,11 +549,14 @@ func Return(size int) {
 }
 
 func Open() {
+    var i = 0
+    
 	Curlev = 0
 	Pc = 0
 
-	for i := range regs {
+	for i < 32 {
 		regs[i] = false
+        i += 1
 	}
 
 }
@@ -573,20 +577,29 @@ func Decode() {
 	for i < Pc {
 		w = uint32(code[i])
 		op = (w / 0x4000000) % 0x40
-		fmt.Printf("%#.8x %4s ", i*4, mnemo[op])
+		fmt.Printf("%#.8x %#.8x %-4s ", i*4, w, mnemo[op])
 		if op < BEQ {
+            // a = 18-bit signed constant
 			a = int(w % 0x40000)
 			if a >= 0x20000 {
 				a -= 0x40000
 			}
-			fmt.Printf("%#.2x, %#.2x, ", uint32((w/0x4000000)%0x10), uint32((w/0x40000)%0x10))
+            if op >= LDW {
+                // a is a word offset, show as byte offset
+                a *= 4
+            }
+			fmt.Printf("%#.2x, %#.2x, ", uint32((w/0x400000)%0x10), uint32((w/0x40000)%0x10))
 		} else {
+            // a = 26-bit signed word offset
 			a = int(w % 0x4000000)
 			if a >= 0x2000000 {
 				a -= 0x4000000
 			}
+            // convert to byte offset
+            a *= 4
 		}
-		fmt.Printf("%#.6x\n", a)
+        
+		fmt.Printf("%#+.6x\n", a)
 		i += 1
 	}
 }
@@ -595,6 +608,12 @@ func Dump(n int) {
 	for i := 0; i < n; i++ {
 		fmt.Printf("%#.8x\n", uint32(code[i]))
 	}
+}
+
+// "Load Module": execute compiled code's module body
+func Load() {
+    RISC.Load(code, Pc)
+    RISC.Execute(entry*4)
 }
 
 // Module body
