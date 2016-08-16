@@ -55,7 +55,7 @@ const (
 )
 
 var (
-	ir   int
+	ir   uint32
 	n, z bool
 	R    [16]int
 	M    [MemSize / 4]int
@@ -85,7 +85,8 @@ func memDump() {
 
 func Execute(start int) {
 	var (
-		opc, a, b, c, nxt int
+		opc uint32
+        a, b, c, nxt int
         i int
 	)
 
@@ -93,27 +94,28 @@ func Execute(start int) {
 	R[15] = start + progOrg
    
     regDump()
+Loop:    
 	for {
 		nxt = R[15] + 4
-		ir = M[R[15]/4]
+		ir = uint32(M[R[15]/4])
 		opc = (ir / 0x4000000) % 0x40
-		a = (ir / 0x400000) % 0x10
-		b = (ir / 0x40000) % 0x10
-		c = ir % 0x40000
-        fmt.Printf("Executing opcode: %#.2x \n", uint8(opc))
+		a = int((ir / 0x400000) % 0x10)
+		b = int((ir / 0x40000) % 0x10)
+		c = int(ir % 0x40000)
+        fmt.Printf("Executing opcode: %#.2d \n", uint8(opc))
 		if opc < MOVI {
             // F0 instruction: c = register
 			c = R[uint8(ir)%0x10]
 		} else if opc < BEQ {
             // F1 instruction: c = 18-bit signed constant
             // F2 instruction: c = 18-bit signed displacement
-			c = ir % 0x40000
+			c = int(ir % 0x40000)
 			if c >= 0x20000 {
 				c -= 0x40000
 			}
 		} else {
             // F3 instruction. c = 26-bit signed displacement
-			c = ir % 0x4000000
+			c = int(ir % 0x4000000)
 			if c >= 0x2000000 {
 				c -= 0x4000000
 			}
@@ -199,8 +201,9 @@ func Execute(start int) {
 			R[14] = R[15] + 4
 		case RET:
 			nxt = R[c%0x10]
+            fmt.Printf("RET: nxt = %#.8x", nxt)
 			if nxt == 0 {
-				break
+				break Loop
 			}
 		}
 		R[15] = nxt
