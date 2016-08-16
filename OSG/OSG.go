@@ -141,12 +141,14 @@ func put(op, a, b, c int) {
 	if op >= 32 {
 		op -= 64
 	}
-	code[Pc] = ((op*16+a)*16+b)*0x40000 + (c%0x40000)
+    //code[Pc] = ASH(ASH(ASH(op,4)+a,4)+b, 18) + (c MOD 40000H)
+    code[Pc] = (((op<<4 | a)<<4 | b) << 18) | (c & 0x3FFFF)
 	Pc += 1
 }
 
 func putBR(op, disp int) {
-	code[Pc] = (op-0x40)*0x4000000 + (disp%0x4000000)
+    //code[Pc] = ASH(op-40H, 26) + (disp MOD 4000000H)
+    code[Pc] = (op-0x40)<<26 | (disp & 0x3FFFFFF)
 	Pc += 1
 }
 
@@ -215,7 +217,8 @@ func merged(L0 int, L1 int) int {
 	if L0 != 0 {
 		L2 = L0
 		for {
-			L3 = code[L2] % 0x40000
+			//L3 = code[L2] % 0x40000
+            L3 = code[L2] & 0x3FFFF
 			if L3 == 0 {
 				break
 			}
@@ -228,13 +231,15 @@ func merged(L0 int, L1 int) int {
 }
 
 func fix(at int, with int) {
-	code[at] = code[at]%0x400000*0x400000 + (with % 0x400000)
+	//code[at] = code[at]%0x400000*0x400000 + (with % 0x400000)
+    code[at] = (code[at] & 0xFFC00000) | (with & 0x3FFFFF) 
 }
 
 func FixLink(L int) {
 	var L1 int
 	for L != 0 {
-		L1 = code[L] % 0x40000
+		//L1 = code[L] % 0x40000
+        L1 = code[L] & 0x3FFFF
 		fix(L, Pc-L)
 		L = L1
 	}
@@ -576,11 +581,12 @@ func Decode() {
 	i = 0
 	for i < Pc {
 		w = uint32(code[i])
-		op = (w / 0x4000000) % 0x40
+        op = (w >> 26) & 0x3F
 		fmt.Printf("%#.8x %#.8x %-4s ", i*4, w, mnemo[op])
 		if op < BEQ {
             // a = 18-bit signed constant
-			a = int(w % 0x40000)
+			//a = int(w % 0x40000)
+            a = int(w & 0x3FFFF)
 			if a >= 0x20000 {
 				a -= 0x40000
 			}
@@ -588,15 +594,19 @@ func Decode() {
                 // a is a word offset, show as byte offset
                 a *= 4
             }
-			fmt.Printf("%#.2x, %#.2x, ", uint32((w/0x400000)%0x10), uint32((w/0x40000)%0x10))
+			fmt.Printf("%#.2x, %#.2x, ", uint32((w >> 22) & 0x0F), uint32((w >> 18) & 0x0F))
 		} else {
             // a = 26-bit signed word offset
-			a = int(w % 0x4000000)
+			//a = int(w % 0x4000000)
+            a = int(w & 0x3FFFFFF)
 			if a >= 0x2000000 {
 				a -= 0x4000000
 			}
-            // convert to byte offset
-            a *= 4
+            // convert to byte offset except for RET when its a register
+            if op < RET {
+                a *= 4    
+            }
+            
 		}
         
 		fmt.Printf("%#+.6x\n", a)

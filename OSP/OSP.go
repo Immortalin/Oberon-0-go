@@ -800,7 +800,7 @@ func Module() {
 			OSG.Close()
 			//OSG.Dump(OSG.Pc)
 			OSG.Decode()
-            OSG.Load()
+            //OSG.Load()
 		}
 	} else {
 		OSS.Mark("Module: MODULE expected")
