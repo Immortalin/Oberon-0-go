@@ -200,8 +200,7 @@ Loop:
 			nxt = R[15] + c*4
 			R[14] = R[15] + 4
 		case RET:
-			nxt = R[c%0x10]
-            fmt.Printf("RET: nxt = %#.8x", nxt)
+			nxt = R[c&0x0F]
 			if nxt == 0 {
 				break Loop
 			}
@@ -210,6 +209,7 @@ Loop:
         regDump()
         fmt.Scanf("Press ENTER", "%d", &i)
 	}
+    memDump()
 }
 
 func Load(code [100]int, len int) {
@@ -220,5 +220,5 @@ func Load(code [100]int, len int) {
         M[i + progOrg/4] = code[i]
         i += 1
     }
-    //memDump()
+    memDump()
 }

@@ -573,7 +573,7 @@ func Close() {
 
 func Decode() {
 	var (
-		a, i int
+		c, i int
         w, op uint32
 	)
 
@@ -583,33 +583,33 @@ func Decode() {
 		w = uint32(code[i])
         op = (w >> 26) & 0x3F
 		fmt.Printf("%#.8x %#.8x %-4s ", i*4, w, mnemo[op])
-		if op < BEQ {
-            // a = 18-bit signed constant
-			//a = int(w % 0x40000)
-            a = int(w & 0x3FFFF)
-			if a >= 0x20000 {
-				a -= 0x40000
+		if op < MOVI {
+            // c = register
+            fmt.Printf("R%.2d, R%.2d, R%.2d\n", uint32((w >> 22) & 0x0F), uint32((w >> 18) & 0x0F), uint32(w & 0x0F))
+        } else if op < BEQ {
+            // c = 18-bit signed immediate or constant  
+            c = int(w & 0x3FFFF)
+			if c >= 0x20000 {
+				c -= 0x40000
 			}
-            if op >= LDW {
-                // a is a word offset, show as byte offset
-                a *= 4
-            }
-			fmt.Printf("%#.2x, %#.2x, ", uint32((w >> 22) & 0x0F), uint32((w >> 18) & 0x0F))
-		} else {
-            // a = 26-bit signed word offset
-			//a = int(w % 0x4000000)
-            a = int(w & 0x3FFFFFF)
-			if a >= 0x2000000 {
-				a -= 0x4000000
-			}
-            // convert to byte offset except for RET when its a register
-            if op < RET {
-                a *= 4    
+            fmt.Printf("R%.2d, R%.2d, %#+.5x\n", uint32((w >> 22) & 0x0F), uint32((w >> 18) & 0x0F), c)
+        } else {
+            c = int(w & 0x3FFFFFF)
+            
+            if op == RET {
+                // c = link register
+                fmt.Printf("R%.2d\n", c)
+            } else {
+                // c = 26-bit signed offset
+                if c >= 0x2000000 {
+				c -= 0x4000000
+                }
+                fmt.Printf("%#+.6x\n", c*4)
             }
             
 		}
         
-		fmt.Printf("%#+.6x\n", a)
+		
 		i += 1
 	}
 }
