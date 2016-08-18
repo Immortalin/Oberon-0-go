@@ -12,7 +12,7 @@ import (
 // in bytes
 const (
 	MemSize = 256
-	progOrg = 128
+	progOrg = 64
 )
 
 const (
@@ -207,14 +207,23 @@ Loop:
 		}
 		R[15] = nxt
         regDump()
+        //memDump()
         fmt.Scanf("Press ENTER", "%d", &i)
 	}
     memDump()
+    
 }
 
 func Load(code [100]int, len int) {
     var i int
 
+    // "zero out" memory
+    i = 0
+    for i < MemSize/4 {
+        M[i] = 0xFFFFFFFF
+        i += 1
+    }
+    // copy and relocate memory image
     i = 0
     for i < len {
         M[i + progOrg/4] = code[i]
