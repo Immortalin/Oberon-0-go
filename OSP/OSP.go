@@ -648,8 +648,6 @@ func fpSection(parblksize *int) {
 	obj = first
 	for obj != guard {
 		obj.Tp = tp
-        // ## next line is bugfix?
-        //obj.Val = *parblksize
 		*parblksize += parsize
 		obj = obj.Next
 	}

@@ -127,7 +127,6 @@ var mnemo = []string{
 	"RD", "WRD", "WRH", "WRL", "OP44", "OP45", "OP46", "OP47",
 	"BEQ", "BNE", "BLT", "BGE", "BLE", "BGT", "OP54", "OP55", "BR", "BSR", "RET"}
 
-// Change from VAR parameter to returning reg no
 func getReg(r *int) {
 
 	*r = 0
@@ -587,7 +586,7 @@ func Decode() {
             // c = register
             fmt.Printf("R%.2d, R%.2d, R%.2d\n", uint32((w >> 22) & 0x0F), uint32((w >> 18) & 0x0F), uint32(w & 0x0F))
         } else if op < BEQ {
-            // c = 18-bit signed immediate or constant  
+            // c = 18-bit signed constant or displacement  
             c = int(w & 0x3FFFF)
 			if c >= 0x20000 {
 				c -= 0x40000
@@ -607,8 +606,7 @@ func Decode() {
                 fmt.Printf("%#+.6x\n", c*4)
             }
             
-		}
-        
+        }
 		
 		i += 1
 	}

@@ -114,7 +114,7 @@ Loop:
 				c -= 0x40000
 			}
 		} else {
-            // F3 instruction. c = 26-bit signed displacement
+            // F3 instruction: c = 26-bit signed displacement
 			c = int(ir % 0x4000000)
 			if c >= 0x2000000 {
 				c -= 0x4000000
@@ -208,7 +208,6 @@ Loop:
 		}
 		R[15] = nxt
         regDump()
-        //memDump()
         fmt.Scanf("Press ENTER", "%d", &i)
 	}
     memDump()
