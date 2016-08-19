@@ -635,6 +635,7 @@ func fpSection(parblksize *int) {
 		}
 	} else {
 		OSS.Mark("FPSection: type identifier expected")
+        tp = OSG.IntType
 	}
 	if first.Class == OSG.Var {
 		parsize = tp.Size
@@ -647,6 +648,8 @@ func fpSection(parblksize *int) {
 	obj = first
 	for obj != guard {
 		obj.Tp = tp
+        // ## next line is bugfix?
+        //obj.Val = *parblksize
 		*parblksize += parsize
 		obj = obj.Next
 	}
@@ -689,16 +692,20 @@ func procedureDecl() {
 		} else if OSG.Curlev == 1 {
 			//OSG.EnterCmd(procid)
 		}
+        fmt.Printf("ProcedureDecl: parblksize = %d\n", parblksize)
 		obj = topScope.Next
 		locblksize = parblksize
 		for obj != guard {
 			obj.Lev = OSG.Curlev
+            // Bug in Appendix text in ELSE clause
+            // Correct version on P.76
 			if obj.Class == OSG.Par {
 				locblksize -= wordSize
 			} else {
-				obj.Val = locblksize
-				obj = obj.Next
-			}
+                locblksize -= obj.Tp.Size
+            }
+            obj.Val = locblksize
+            obj = obj.Next
 		}
 		proc.Dsc = topScope.Next
 		if sym == OSS.Semicolon {
@@ -800,7 +807,7 @@ func Module() {
 			OSG.Close()
 			//OSG.Dump(OSG.Pc)
 			OSG.Decode()
-            //OSG.Load()
+            OSG.Load()
 		}
 	} else {
 		OSS.Mark("Module: MODULE expected")

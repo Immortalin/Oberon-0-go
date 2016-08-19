@@ -11,7 +11,7 @@ import (
 
 // in bytes
 const (
-	MemSize = 256
+	MemSize = 512
 	progOrg = 64
 )
 
@@ -77,7 +77,7 @@ func memDump() {
     var i int
     
     for i = 0; i<(MemSize/4); i += 1 {
-        fmt.Printf("%#.2x %#.8x\n", i*4, uint32(M[i]))
+        fmt.Printf("%#.3x %#.8x\n", i*4, uint32(M[i]))
     }
     
     
@@ -154,6 +154,7 @@ Loop:
 			}
 		case LDW:
 			R[a] = M[(R[b]+c)/4]
+            fmt.Printf("LDW: address %#.8x, contents %#.8x\n", (R[b]+c), M[(R[b]+c)/4])
 		case POP:
 			R[a] = M[(R[b])/4]
 			R[b] += c
@@ -214,7 +215,7 @@ Loop:
     
 }
 
-func Load(code [100]int, len int) {
+func Load(code [128]int, len int) {
     var i int
 
     // "zero out" memory

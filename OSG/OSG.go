@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	maxCode     = 100
+	maxCode     = 128
 	maxRel      = 200
 	nofCom      = 16
 )
@@ -628,6 +628,7 @@ func Load() {
 
 // Module body
 func init() {
+    
 	BoolType = new(TypeDesc)
 	BoolType.Form = Boolean
 	BoolType.Size = 4
@@ -635,4 +636,5 @@ func init() {
 	IntType = new(TypeDesc)
 	IntType.Form = Integer
 	IntType.Size = 4
+    
 }
