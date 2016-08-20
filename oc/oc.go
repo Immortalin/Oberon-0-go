@@ -8,17 +8,18 @@ C:\Data\Personal\go\bin> oc Test.m
 package main
 
 import (
-    "os"
-    "fmt"
 	"OSP"
+	"fmt"
+	"os"
 )
 
 func main() {
-    
-    if !(len(os.Args) > 1) {
-        fmt.Printf("Usage: oc <filename.m>\n")
-        return
-    }
-    OSP.Compile(os.Args[1])
-	
+
+	if !(len(os.Args) > 1) {
+		fmt.Printf("Usage: oc <filename.m>\n")
+		return
+	}
+    // ##TODO: Add option parsing and set this with -d flag
+	OSP.Dump = true
+	OSP.Compile(os.Args[1])
 }

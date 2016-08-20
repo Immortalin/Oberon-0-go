@@ -1,7 +1,7 @@
 /*
 OSS.go: The Oberon-0 Scanner
 24.07.2016 TSS
-Texts.Read(R, ch) -> ch, _ = r.ReadByte()
+Texts.Read(R, ch) -> ch, err = r.ReadByte()
 */
 
 package OSS
@@ -64,7 +64,7 @@ type ident [IdLen]byte
 
 var (
 	Val    int
-    Id     []byte
+	Id     []byte
 	Error  bool
 	ch     byte
 	err    error
@@ -119,7 +119,6 @@ func identifier() int {
 	for {
 		if i < 16 {
 			Id = append(Id, ch)
-            //Id[i] = ch
 			i += 1
 		}
 		ch, _ = r.ReadByte()
@@ -132,10 +131,8 @@ func identifier() int {
 	}
 	k := 0
 	for k < len(keyTab) {
-        //fmt.Println(keyTab[k].id)
-        //fmt.Println(string(Id[:i]))    
 		if keyTab[k].id == string(Id[:]) {
-        	break
+			break
 		}
 		k += 1
 	}
@@ -298,5 +295,5 @@ func Init(fname string) {
 /* Go version of Module "body" */
 func init() {
 	Error = true
-    Id = make([]byte, 16)
+	Id = make([]byte, 16)
 }

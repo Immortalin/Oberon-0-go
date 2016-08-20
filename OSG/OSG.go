@@ -7,14 +7,14 @@ package OSG
 
 import (
 	"OSS"
-    "RISC"
+	"RISC"
 	"fmt"
 )
 
 const (
-	maxCode     = 128
-	maxRel      = 200
-	nofCom      = 16
+	maxCode = 128
+	maxRel  = 200
+	nofCom  = 16
 )
 
 // Class/mode
@@ -140,14 +140,14 @@ func put(op, a, b, c int) {
 	if op >= 32 {
 		op -= 64
 	}
-    //code[Pc] = ASH(ASH(ASH(op,4)+a,4)+b, 18) + (c MOD 40000H)
-    code[Pc] = (((op<<4 | a)<<4 | b) << 18) | (c & 0x3FFFF)
+	//code[Pc] = ASH(ASH(ASH(op,4)+a,4)+b, 18) + (c MOD 40000H)
+	code[Pc] = (((op<<4|a)<<4 | b) << 18) | (c & 0x3FFFF)
 	Pc += 1
 }
 
 func putBR(op, disp int) {
-    //code[Pc] = ASH(op-40H, 26) + (disp MOD 4000000H)
-    code[Pc] = (op-0x40)<<26 | (disp & 0x3FFFFFF)
+	//code[Pc] = ASH(op-40H, 26) + (disp MOD 4000000H)
+	code[Pc] = (op-0x40)<<26 | (disp & 0x3FFFFFF)
 	Pc += 1
 }
 
@@ -217,7 +217,7 @@ func merged(L0 int, L1 int) int {
 		L2 = L0
 		for {
 			//L3 = code[L2] % 0x40000
-            L3 = code[L2] & 0x3FFFF
+			L3 = code[L2] & 0x3FFFF
 			if L3 == 0 {
 				break
 			}
@@ -231,14 +231,14 @@ func merged(L0 int, L1 int) int {
 
 func fix(at int, with int) {
 	//code[at] = code[at]%0x400000*0x400000 + (with % 0x400000)
-    code[at] = (code[at] & 0xFFC00000) | (with & 0x3FFFFF) 
+	code[at] = (code[at] & 0xFFC00000) | (with & 0x3FFFFF)
 }
 
 func FixLink(L int) {
 	var L1 int
 	for L != 0 {
 		//L1 = code[L] % 0x40000
-        L1 = code[L] & 0x3FFFF
+		L1 = code[L] & 0x3FFFF
 		fix(L, Pc-L)
 		L = L1
 	}
@@ -268,7 +268,6 @@ func MakeItem(x *Item, y Object) {
 	} else if y.Lev == Curlev {
 		x.r = FP
 	} else {
-		OSS.Mark("MakeItem: level!")
 		x.r = 0
 	}
 
@@ -553,14 +552,14 @@ func Return(size int) {
 }
 
 func Open() {
-    var i = 0
-    
+	var i = 0
+
 	Curlev = 0
 	Pc = 0
 
 	for i < 32 {
 		regs[i] = false
-        i += 1
+		i += 1
 	}
 
 }
@@ -572,44 +571,43 @@ func Close() {
 
 func Decode() {
 	var (
-		c, i int
-        w, op uint32
+		c, i  int
+		w, op uint32
 	)
 
-	fmt.Printf("Entry address: %#.8x\n", entry*4)
+	fmt.Printf("\nEntry address: %#.8x\n", entry*4)
 	i = 0
 	for i < Pc {
 		w = uint32(code[i])
-        op = (w >> 26) & 0x3F
+		op = (w >> 26) & 0x3F
 		fmt.Printf("%#.8x %#.8x %-4s ", i*4, w, mnemo[op])
 		if op < MOVI {
-            // c = register
-            fmt.Printf("R%.2d, R%.2d, R%.2d\n", uint32((w >> 22) & 0x0F), uint32((w >> 18) & 0x0F), uint32(w & 0x0F))
-        } else if op < BEQ {
-            // c = 18-bit signed constant or displacement  
-            c = int(w & 0x3FFFF)
+			// c = register
+			fmt.Printf("R%.2d, R%.2d, R%.2d\n", uint32((w>>22)&0x0F), uint32((w>>18)&0x0F), uint32(w&0x0F))
+		} else if op < BEQ {
+			// c = 18-bit signed constant or displacement
+			c = int(w & 0x3FFFF)
 			if c >= 0x20000 {
 				c -= 0x40000
 			}
-            fmt.Printf("R%.2d, R%.2d, %#+.5x\n", uint32((w >> 22) & 0x0F), uint32((w >> 18) & 0x0F), c)
-        } else {
-            c = int(w & 0x3FFFFFF)
-            
-            if op == RET {
-                // c = link register
-                fmt.Printf("R%.2d\n", c)
-            } else {
-                // c = 26-bit signed offset
-                if c >= 0x2000000 {
-				c -= 0x4000000
-                }
-                fmt.Printf("%#+.6x\n", c*4)
-            }
-            
-        }
-		
+			fmt.Printf("R%.2d, R%.2d, %#+.5x\n", uint32((w>>22)&0x0F), uint32((w>>18)&0x0F), c)
+		} else {
+			c = int(w & 0x3FFFFFF)
+
+			if op == RET {
+				// c = link register
+				fmt.Printf("R%.2d\n", c)
+			} else {
+				// c = 26-bit signed offset
+				if c >= 0x2000000 {
+					c -= 0x4000000
+				}
+				fmt.Printf("%#+.6x\n", c*4)
+			}
+		}
 		i += 1
 	}
+    fmt.Printf("\n%d bytes\n", Pc)
 }
 
 func Dump(n int) {
@@ -620,13 +618,13 @@ func Dump(n int) {
 
 // "Load Module": execute compiled code's module body
 func Load() {
-    RISC.Load(code, Pc)
-    RISC.Execute(entry*4)
+	RISC.Load(code, Pc)
+	RISC.Execute(entry * 4)
 }
 
 // Module body
 func init() {
-    
+
 	BoolType = new(TypeDesc)
 	BoolType.Form = Boolean
 	BoolType.Size = 4
@@ -634,5 +632,5 @@ func init() {
 	IntType = new(TypeDesc)
 	IntType.Form = Integer
 	IntType.Size = 4
-    
+
 }

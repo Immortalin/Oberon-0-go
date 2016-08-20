@@ -6,7 +6,7 @@ RISC.go: The CPU emulator
 package RISC
 
 import (
-    "fmt"
+	"fmt"
 )
 
 // in bytes
@@ -62,39 +62,36 @@ var (
 )
 
 func regDump() {
-    var i int
-    
-    for i = 0; i<16; i += 4 {
-        fmt.Printf("R[%#.2d]: %#.8x  ", i, R[i])
-        fmt.Printf("R[%#.2d]: %#.8x  ", i+1, R[i+1])
-        fmt.Printf("R[%#.2d]: %#.8x  ", i+2, R[i+2])
-        fmt.Printf("R[%#.2d]: %#.8x\n", i+3, R[i+3])
-    }
-    fmt.Printf("\n")
+	var i int
+
+	for i = 0; i < 16; i += 4 {
+		fmt.Printf("R[%#.2d]: %#.8x  ", i, R[i])
+		fmt.Printf("R[%#.2d]: %#.8x  ", i+1, R[i+1])
+		fmt.Printf("R[%#.2d]: %#.8x  ", i+2, R[i+2])
+		fmt.Printf("R[%#.2d]: %#.8x\n", i+3, R[i+3])
+	}
+	fmt.Printf("\n")
 }
 
 func memDump() {
-    var i int
-    
-    for i = 0; i<(MemSize/4); i += 1 {
-        fmt.Printf("%#.3x %#.8x\n", i*4, uint32(M[i]))
-    }
-    
-    
+	var i int
+
+	for i = 0; i < (MemSize / 4); i += 1 {
+		fmt.Printf("%#.3x %#.8x\n", i*4, uint32(M[i]))
+	}
+
 }
 
 func Execute(start int) {
 	var (
-		opc uint32
-        a, b, c, nxt int
-        i int
+		opc          uint32
+		a, b, c, nxt int
 	)
 
 	R[14] = 0
 	R[15] = start + progOrg
-   
-    regDump()
-Loop:    
+
+Loop:
 	for {
 		nxt = R[15] + 4
 		ir = uint32(M[R[15]/4])
@@ -102,19 +99,19 @@ Loop:
 		a = int((ir / 0x400000) % 0x10)
 		b = int((ir / 0x40000) % 0x10)
 		c = int(ir % 0x40000)
-        fmt.Printf("Executing opcode: %#.2d \n", uint8(opc))
+		//fmt.Printf("Executing opcode: %#.2d \n", uint8(opc))
 		if opc < MOVI {
-            // F0 instruction: c = register
+			// F0 instruction: c = register
 			c = R[uint8(ir)%0x10]
 		} else if opc < BEQ {
-            // F1 instruction: c = 18-bit signed constant
-            // F2 instruction: c = 18-bit signed displacement
+			// F1 instruction: c = 18-bit signed constant
+			// F2 instruction: c = 18-bit signed displacement
 			c = int(ir % 0x40000)
 			if c >= 0x20000 {
 				c -= 0x40000
 			}
 		} else {
-            // F3 instruction: c = 26-bit signed displacement
+			// F3 instruction: c = 26-bit signed displacement
 			c = int(ir % 0x4000000)
 			if c >= 0x2000000 {
 				c -= 0x4000000
@@ -154,7 +151,6 @@ Loop:
 			}
 		case LDW:
 			R[a] = M[(R[b]+c)/4]
-            fmt.Printf("LDW: address %#.8x, contents %#.8x\n", (R[b]+c), M[(R[b]+c)/4])
 		case POP:
 			R[a] = M[(R[b])/4]
 			R[b] += c
@@ -164,7 +160,7 @@ Loop:
 			R[b] -= c
 			M[(R[b])/4] = R[a]
 		case RD:
-			fmt.Scanf(">", "%d", &R[a])
+			fmt.Scanf("%d", &R[a])
 		case WRD:
 			fmt.Printf("%d ", R[c])
 		case WRH:
@@ -206,28 +202,25 @@ Loop:
 				break Loop
 			}
 		}
+        //regDump()
 		R[15] = nxt
-        regDump()
-        fmt.Scanf("Press ENTER", "%d", &i)
 	}
-    memDump()
-    
+    //memDump()
 }
 
 func Load(code [128]int, len int) {
-    var i int
+	var i int
 
-    // "zero out" memory
-    i = 0
-    for i < MemSize/4 {
-        M[i] = 0xFFFFFFFF
-        i += 1
-    }
-    // copy and relocate memory image
-    i = 0
-    for i < len {
-        M[i + progOrg/4] = code[i]
-        i += 1
-    }
-    memDump()
+	// "zero out" memory
+	i = 0
+	for i < MemSize/4 {
+		M[i] = 0xFFFFFFFF
+		i += 1
+	}
+	// copy and relocate memory image
+	i = 0
+	for i < len {
+		M[i+progOrg/4] = code[i]
+		i += 1
+	}
 }
