@@ -3,7 +3,10 @@ Port of Niklaus Wirth's Oberon-0 teaching language compiler to Go.
 
 The code is as faithful a reproduction of the original source as possible. The resulting code is not idiomatic Go, but rather Oberon written in Go.
 
-# Differences
+# Purpose
+An [earlier attempt] (https://github.com/tschaer/Oberon-0) at bringing this teaching language to life suffered from a difficult to use development environment. The idea was to re-write it in a modern, well-supported language.
+
+## Differences
 The differences in the two languages were handled as follows:
   1. **VAR parameters**. In most cases the VAR parameter is used to pass an "empty" variable that will be "filled" by the procedure call. This was replaced with a pointer in the func declaration, and a dereference in the func body.
   2. **Sets**. A set is used to track the allocation of CPU registers: if it's in the set, it's allocated, otherwise it's free. The same functionality was provided using an array of bools.
@@ -14,12 +17,12 @@ The differences in the two languages were handled as follows:
   7. **Character ranges**. The large CASE statement in the lexer uses the ranges "A".."Z", "a".."z". Go supports expressions as cases in a switch statement, so the equivalent became case (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')
   8. **INC()/DEC()**. Go has convenient and compact equivalents with += and -=
 
-# Conveniences
+## Conveniences
 A number of features in Go are much more convenient to use than Oberon, and the temptation proved too strong to keep the original source "100% pure":
   1. **Initialization syntax**. Go allows data structures to be initialized using a literal notation. This obviates the need for doing this at run time, for example in the keyword table in the scanner (OSS.go)
   2. **Logical instructions**. When constructing and deconstructing 32-bit RISC CPU instructions, Oberon uses arithmetic operations. The C-derived bit shifting (>>, <<) and masking (&, |) notation in Go is used instead, its familiarity making it less error-prone to write & debug.
 
-# Inconveniences
+## Inconveniences
 Oberon and Go are not the same languages. But it is easy to fall into that trap of assuming they are, when trying to write one in the other.
    1. **Slices vs Arrays** Have to be careful here - Go's syntax is built with a bias towards slices. In the Oberon usage, there is no equivalent concept, and no direct application of slices. Extra care to _force_ the use of arrays and not slices.
    2. **Immutable Strings** Extra hoops with byte arrays, and the confusion with byte slices.
