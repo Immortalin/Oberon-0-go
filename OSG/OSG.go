@@ -455,6 +455,10 @@ func Parameter(x *Item, ftyp Type, class int) {
 			if x.Mode == Var {
 				if x.A != 0 {
 					getReg(&r)
+                    // Addition to original source: handle VAR parameters at module scope correctly
+                    if x.Lev == 0 {
+                        x.A -= Pc * 4
+                    }
 					put(ADDI, r, x.r, x.A)
 				} else {
 					r = x.r
