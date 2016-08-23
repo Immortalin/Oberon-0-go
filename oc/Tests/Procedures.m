@@ -22,6 +22,15 @@ MODULE Procedures;
         x := x + 1
     END p4;
     
+    PROCEDURE p5;
+        VAR k: INTEGER;
+    BEGIN
+        k := 0;
+        Write(k);
+        p4(k); Write(k);
+        p4(k); Write(k)
+    END p5;
+ 
 BEGIN
     p1;
     Write(v);
@@ -32,5 +41,7 @@ BEGIN
     (* Should print 1 *)
     p4(v); Write(v);
     (* Should print 2 *)
-    p4(v); Write(v)
+    p4(v); Write(v);
+    
+    p5
 END Procedures.
