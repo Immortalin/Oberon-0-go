@@ -8,7 +8,7 @@ The programming language Oberon was conceived by Niklaus Wirth in 1986 as a refi
 
 Oberon-0 is a subset designed to teach compiler construction and defined in Wirth's book _Compiler Construction_ (www.ethoberon.ethz.ch/WirthPubl/CBEAll.pdf), the revised edition from 2005. The source of the compiler is written in the full version of Oberon and designed to run on the ETH Oberon System. To use it today means porting the compiler to a modern, well-supported language.
 
-An [earlier attempt] (https://github.com/tschaer/Oberon-0) used an Oberon-2 compiler, but this proved counterproductive. It turns out that the Go programming language is a descendant of Oberon, thanks to one of Wirth's former students Robert Griesemer, and [described in this talk at GopherCon 2015] (https://www.youtube.com/watch?v=0ReKdcpNyQg)
+An [earlier attempt] (https://github.com/tschaer/Oberon-0) used an Oberon-2 compiler, but this proved counterproductive. It turns out that the Go programming language is a descendant of Oberon, thanks to one of Wirth's former students Robert Griesemer, and [described in this talk at GopherCon 2015] (https://www.youtube.com/watch?v=0ReKdcpNyQg). That made it a natural choice for a target language.
 
 ## Differences
 The differences in the two languages were handled as follows:
