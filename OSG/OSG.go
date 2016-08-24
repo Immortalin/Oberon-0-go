@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	maxCode = 128
+	maxCode = 256
 	maxRel  = 200
 	nofCom  = 16
 )
@@ -455,10 +455,10 @@ func Parameter(x *Item, ftyp Type, class int) {
 			if x.Mode == Var {
 				if x.A != 0 {
 					getReg(&r)
-                    // Addition to original source: handle VAR parameters at module scope correctly
-                    if x.Lev == 0 {
-                        x.A -= Pc * 4
-                    }
+					// Addition to original source: handle VAR parameters at module scope correctly
+					if x.Lev == 0 {
+						x.A -= Pc * 4
+					}
 					put(ADDI, r, x.r, x.A)
 				} else {
 					r = x.r
@@ -537,7 +537,10 @@ func IOCall(x *Item, y *Item) {
 
 func Header(size int) {
 	entry = Pc
-	put(MOVI, SP, 0, RISC.MemSize-size)
+	// Stack starts at top of memory
+	put(MOVI, SP, 0, RISC.MemSize)
+	// Code starts after VAR area
+	RISC.ProgOrg = size
 	put(PSH, LNK, SP, 4)
 }
 
@@ -611,7 +614,7 @@ func Decode() {
 		}
 		i += 1
 	}
-    fmt.Printf("\n%d bytes\n", Pc)
+	fmt.Printf("\n%d bytes\n", Pc*4)
 }
 
 func Dump(n int) {

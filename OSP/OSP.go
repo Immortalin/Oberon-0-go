@@ -691,7 +691,7 @@ func procedureDecl() {
 		} else if OSG.Curlev == 1 {
 			//OSG.EnterCmd(procid)
 		}
-		fmt.Printf("ProcedureDecl: parblksize = %d\n", parblksize)
+		//fmt.Printf("ProcedureDecl: parblksize = %d\n", parblksize)
 		obj = topScope.Next
 		locblksize = parblksize
 		for obj != guard {

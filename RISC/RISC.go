@@ -11,8 +11,7 @@ import (
 
 // in bytes
 const (
-	MemSize = 512
-	progOrg = 64
+	MemSize = 1024
 )
 
 const (
@@ -55,10 +54,11 @@ const (
 )
 
 var (
-	ir   uint32
-	n, z bool
-	R    [16]int
-	M    [MemSize / 4]int
+	ir      uint32
+	n, z    bool
+	R       [16]int
+	M       [MemSize / 4]int
+	ProgOrg int
 )
 
 func regDump() {
@@ -89,7 +89,7 @@ func Execute(start int) {
 	)
 
 	R[14] = 0
-	R[15] = start + progOrg
+	R[15] = start + ProgOrg
 
 Loop:
 	for {
@@ -164,7 +164,7 @@ Loop:
 		case WRD:
 			fmt.Printf("%d ", R[c])
 		case WRH:
-			fmt.Printf("%x", R[c])
+			fmt.Printf("%#x ", R[c])
 		case WRL:
 			fmt.Printf("\n")
 		case BEQ:
@@ -202,13 +202,13 @@ Loop:
 				break Loop
 			}
 		}
-        //regDump()
+		//regDump()
 		R[15] = nxt
 	}
-    //memDump()
+	
 }
 
-func Load(code [128]int, len int) {
+func Load(code [256]int, len int) {
 	var i int
 
 	// "zero out" memory
@@ -220,7 +220,7 @@ func Load(code [128]int, len int) {
 	// copy and relocate memory image
 	i = 0
 	for i < len {
-		M[i+progOrg/4] = code[i]
+		M[i+(ProgOrg/4)] = code[i]
 		i += 1
 	}
 }
