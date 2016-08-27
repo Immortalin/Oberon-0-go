@@ -151,6 +151,9 @@ Loop:
 			}
 		case LDW:
 			R[a] = M[(R[b]+c)/4]
+            // Set flags on load (##BUGFIX)
+            z = (R[a] == 0)
+            n = (R[a] < 0)
 		case POP:
 			R[a] = M[(R[b])/4]
 			R[b] += c
