@@ -3,6 +3,15 @@ Port of Niklaus Wirth's Oberon-0 teaching language compiler to Go.
 
 The code is as faithful a reproduction of the original source as possible. The resulting code is not idiomatic Go, but rather Oberon written in Go.
 
+# Build and Try
+The development is done under Windows using Visual Studio Code. With the Go distribution for Windows installed, and the default project folder structure (with *.m test cases in the \bin folder):
+
+    go\bin> go install oc
+    
+    go\bin> oc Write.m
+    
+and so forth, any valid Oberon-0 syntax file as decribed below can be used.
+
 # Oberon
 The programming language Oberon was conceived by Niklaus Wirth in 1986 as a refinement and extension of his previous languages Pascal and Modula-2. It formed the basis of a complete computer and operating system, a number of which were networked and used at the ETH Zurich in Switzerland for many years.
 
