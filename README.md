@@ -10,7 +10,7 @@ The development is done under Windows using Visual Studio Code. With the Go dist
     
     go\bin> oc Write.m
     
-and so forth, any valid Oberon-0 syntax file as decribed below can be used.
+and so forth, any valid Oberon-0 syntax file as decribed below can be used. The code is still actively being debugged as long as there are open [issues] (https://github.com/tschaer/Oberon-0-go/issues).
 
 # Oberon
 The programming language Oberon was conceived by Niklaus Wirth in 1986 as a refinement and extension of his previous languages Pascal and Modula-2. It formed the basis of a complete computer and operating system, a number of which were networked and used at the ETH Zurich in Switzerland for many years.
