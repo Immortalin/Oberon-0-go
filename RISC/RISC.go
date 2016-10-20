@@ -76,7 +76,7 @@ func regDump() {
 func memDump() {
 	var i int
 
-	for i = 0; i < (MemSize / 4); i += 1 {
+	for i = 0; i < (MemSize / 16); i += 1 {
 		fmt.Printf("%#.3x %#.8x\n", i*4, uint32(M[i]))
 	}
 
@@ -133,6 +133,8 @@ Loop:
 				R[a] = -(c << uint(b))
 			}
 		case ADD, ADDI:
+            // ##BUGFIX increment the PC here
+            R[15] = nxt
 			R[a] = R[b] + c
 		case SUB, SUBI:
 			R[a] = R[b] - c
@@ -150,6 +152,7 @@ Loop:
 				R[a] = 0
 			}
 		case LDW:
+            //fmt.Printf("LDW: index = %d, b = %d, R[b] = %d, c = %d\n", (R[b]+c)/4, b, R[b], c)
 			R[a] = M[(R[b]+c)/4]
             // Set flags on load (##BUGFIX)
             z = (R[a] == 0)
@@ -208,16 +211,16 @@ Loop:
 		//regDump()
 		R[15] = nxt
 	}
-	
+	memDump()
 }
 
 func Load(code [256]int, len int) {
 	var i int
 
-	// "zero out" memory
+	// "zero out" memory, but with a distinct initial value
 	i = 0
 	for i < MemSize/4 {
-		M[i] = 0xFFFFFFFF
+		M[i] = 0xFFFFFFFF - i
 		i += 1
 	}
 	// copy and relocate memory image

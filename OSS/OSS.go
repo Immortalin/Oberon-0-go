@@ -252,7 +252,7 @@ func Get(sym *int) {
 			ch, err = r.ReadByte()
 			if ch == '*' {
 				comment()
-                Get(sym)
+				Get(sym)
 			} else {
 				*sym = Lparen
 			}

@@ -19,7 +19,7 @@ func main() {
 		fmt.Printf("Usage: oc <filename.m>\n")
 		return
 	}
-    // ##TODO: Add option parsing and set this with -d flag
+	// ##TODO: Add option parsing and set this with -d flag
 	OSP.Dump = true
 	OSP.Compile(os.Args[1])
 }

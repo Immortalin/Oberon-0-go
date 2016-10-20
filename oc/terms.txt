@@ -1,0 +1,88 @@
+A/B choices of words, features etc
+
+1. monadic and dyadic instead of unary and binary
+  - unary is ok, but binary suggests binary or even bit operands
+  - dyadic is good, monadic has haskell/monad connotations but ignore?
+
+2. Module vs Package -> Module
+  - Package expands "Module" to folder structures with multiple files
+  - Module is a single file, this may be too limited but is a good
+    enough starting point, esp. with respect to symbols files/independent
+    compilation
+    
+3. Pointers vs. VAR -> Pointers
+  - VAR parameter has the advantage of not changing syntax ie. with pointers you have to use *varname to get the value
+  - 
+
+4. Uppercase keywords vs lowercase
+  - Jury still out: differentiating keywords from identifiers can help
+    readability
+  - SCREAMING may hinder visual flow, aesthetics
+  - allow both? or constrain to a single spelling?
+
+5. PROCEDURE vs func -> neither
+  - PROCEDURE is too long. PROC might work? More technically correct since
+    there are proper and improper procedures
+  - func is vague and misleading. "Functions" are side-effect-freel evaluations,
+    which return deterministic results.
+
+6. Uppercase vs Starred symbol export in Modules -> Stars
+  - Outside of a module, ALL symbols will have upprcase, so carry no
+    information to the programmer or reader. But it does constrict naming
+  - Inside a module, it makes no difference: the star only appears once,
+    in the declaration
+
+7. *typename or POINTER TO typename -> *typename
+  - ditch POINTER TO altogether - * and & are so much more concise
+  - ^ is used for dereference but confusing when used to denote forward
+    declarations also
+    
+8. func_sig(args) vs func_sig(args) IS "external name" -> IS form
+  - disambugates a function with no body from a forward reference
+  - Also tells you what the name of the backing code is in some external
+    file (eg. assembly)
+    
+9. ARRAY n OF type vs [n]type -> [n]type
+
+10. x int vs x: int -> colon form
+  - clearly demarcates variable name from type name, important when the typer
+    name is not an easily recognized type
+  - allows identifier lists in both procedure/method calls, not only in VAR lists
+    eg. (x, y: int) instead of (x int, y int)
+    
+11. = vs ==, := vs = -> := is assignment, == is comparison
+  - = reserved for another use, perhaps as a Python-style aliasing
+    operation: x = y means whatever y is, also let it be called by the
+    name x; y and x are just names and not actual objects or storage
+    locations, and do not themselves have a type, they exist only in
+    the symbol table for that scope
+  - === could be like in Javascript, to test for object identity ie.
+    after x = y aliasing operation, then x === y is true. x == y would
+    only work if a value comparison was defined for the data types that
+        
+12. != vs # -> !=
+
+13. INC(i,n) vs i++ vs i+=n -> i += n
+  - += is an exact match for INC(), -= for DEC()
+  - INC, DEC are predeclared system procedures, += are digraph shorthands
+  - don't ever want to see ++ or -- in code - bad habit, try to do
+    something about it with the compiler  
+
+14. Comments: single vs multiline
+  - both could be allowed
+  - comments must nest to be able to "comment out" blocks of code for testing
+  - single-line comment could be // or # 
+  - multi-line comment could be (* ... *) or /* ... */ 
+  
+15. Explicit field derference vs implicit field dereference
+  - explicit means (*p).fieldname or (horror) p->fieldname
+  - implicit means p.fieldname
+  
+16. RECORD vs struct -> struct
+
+17. Semicolon vs comma in procedure declaration argument lists -> conflict
+  - conflict arises because of Oberon's IdentList idea, which is consistently applied
+    anywhere declarations arise, even in procedure declarations:
+  - PROCEDURE p(x, y: INT; b:BOOLEAN);
+  - PROCEDURE p(x: int, y: int, b:BOOLEAN);
+  - to use the second form means scrapping the consistency of IdentLists

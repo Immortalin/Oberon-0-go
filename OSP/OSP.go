@@ -27,7 +27,7 @@ var (
 
 func printObj(x OSG.Object) {
 	for x != guard {
-		fmt.Println(x)
+		fmt.Printf("Class %d Level %d Name %s Val %#.2x\n", x.Class, x.Lev, x.Name, x.Val)
 		x = x.Next
 	}
 }
@@ -167,6 +167,7 @@ func factor(x *OSG.Item) {
 
 	if sym == OSS.Ident {
 		find(&obj)
+        printObj(obj)
 		OSS.Get(&sym)
 		OSG.MakeItem(x, obj)
 		selector(x)
