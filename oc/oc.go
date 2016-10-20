@@ -1,6 +1,6 @@
 /*
 Build with:
-C:\> go install oc
+C:\> go install Oberon-0-go/oc
 Run:
 C:\Data\Personal\go\bin> oc Test.m
 */
@@ -8,7 +8,7 @@ C:\Data\Personal\go\bin> oc Test.m
 package main
 
 import (
-	"OSP"
+	"Oberon-0-go/OSP"
 	"fmt"
 	"os"
 )

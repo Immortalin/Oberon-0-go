@@ -6,8 +6,8 @@ OSG.go: The Oberon-0 Code Generator
 package OSG
 
 import (
-	"OSS"
-	"RISC"
+	"Oberon-0-go/OSS"
+	"Oberon-0-go/RISC"
 	"fmt"
 )
 

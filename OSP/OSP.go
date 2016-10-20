@@ -8,8 +8,8 @@ eg OSS.Get(&sym), and usage of sym inside Get is always as *sym
 package OSP
 
 import (
-	"OSG"
-	"OSS"
+	"Oberon-0-go/OSG"
+	"Oberon-0-go/OSS"
 	"bytes"
 	"fmt"
 )
