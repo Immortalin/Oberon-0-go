@@ -4,9 +4,9 @@ Port of Niklaus Wirth's Oberon-0 teaching language compiler to Go.
 The code is as faithful a reproduction of the original source as possible. The resulting code is not idiomatic Go, but rather Oberon written in Go.
 
 # Build and Try
-The development is done under Windows using Visual Studio Code. With the Go distribution for Windows installed, and the default project folder structure, copy all folders in this repository into <go root>\src. Build the project with (no build/make file required):
+The development is done under Windows using Visual Studio Code. With the Go distribution for Windows installed, and the default project folder structure, copy all folders in this repository into <go root>\src\Oberon-0-go. Build the project with (no build/make file required):
 
-    <go root>\bin> go install oc
+    <go root>\src> go install Oberon-0-go\oc
     
 Run the Oberon-0 compiler with (copy *.m test cases to the \bin folder):
 
