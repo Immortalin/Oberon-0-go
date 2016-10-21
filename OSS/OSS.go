@@ -10,7 +10,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"os"
 )
 
 const (
@@ -281,15 +280,10 @@ func Get(sym *int) {
 }
 
 /* Scanner init */
-func Init(fname string) {
-	file, err := os.Open(fname)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		r = bufio.NewReader(file)
-		ch, _ = r.ReadByte()
-		Error = false
-	}
+func Init(reader *bufio.Reader) {
+	r = reader
+	ch, _ = r.ReadByte()
+	Error = false
 }
 
 /* Go version of Module "body" */

@@ -12,6 +12,7 @@ import (
 	"Oberon-0-go/OSS"
 	"bytes"
 	"fmt"
+	"bufio"
 )
 
 const (
@@ -167,7 +168,7 @@ func factor(x *OSG.Item) {
 
 	if sym == OSS.Ident {
 		find(&obj)
-        printObj(obj)
+		printObj(obj)
 		OSS.Get(&sym)
 		OSG.MakeItem(x, obj)
 		selector(x)
@@ -815,8 +816,8 @@ func Module() {
 	}
 }
 
-func Compile(fname string) {
-	OSS.Init(fname)
+func Compile(reader *bufio.Reader) {
+	OSS.Init(reader)
 	OSS.Get(&sym)
 	Module()
 }

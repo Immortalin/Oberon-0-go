@@ -9,6 +9,7 @@ package main
 
 import (
 	"Oberon-0-go/OSP"
+	"bufio"
 	"fmt"
 	"os"
 )
@@ -21,5 +22,13 @@ func main() {
 	}
 	// ##TODO: Add option parsing and set this with -d flag
 	OSP.Dump = true
-	OSP.Compile(os.Args[1])
+
+	filename := os.Args[1]
+	file, err := os.Open(filename)
+	if err != nil {
+		fmt.Println(err)
+		return
+	} else {
+		OSP.Compile(bufio.NewReader(file))
+	}
 }
