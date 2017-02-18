@@ -10,9 +10,9 @@ package OSP
 import (
 	"Oberon-0-go/OSG"
 	"Oberon-0-go/OSS"
+	"bufio"
 	"bytes"
 	"fmt"
-	"bufio"
 )
 
 const (
@@ -838,7 +838,6 @@ func enter(cl int, n int, name string, tp OSG.Type) {
 
 // Module body
 func init() {
-	fmt.Printf("Oberon-0 Compiler\n")
 
 	guard = new(OSG.ObjDesc)
 	guard.Class = OSG.Var

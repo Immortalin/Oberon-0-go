@@ -133,8 +133,8 @@ Loop:
 				R[a] = -(c << uint(b))
 			}
 		case ADD, ADDI:
-            // ##BUGFIX increment the PC here
-            R[15] = nxt
+			// ##BUGFIX increment the PC here
+			R[15] = nxt
 			R[a] = R[b] + c
 		case SUB, SUBI:
 			R[a] = R[b] - c
@@ -152,11 +152,11 @@ Loop:
 				R[a] = 0
 			}
 		case LDW:
-            //fmt.Printf("LDW: index = %d, b = %d, R[b] = %d, c = %d\n", (R[b]+c)/4, b, R[b], c)
+			//fmt.Printf("LDW: index = %d, b = %d, R[b] = %d, c = %d\n", (R[b]+c)/4, b, R[b], c)
 			R[a] = M[(R[b]+c)/4]
-            // Set flags on load (##BUGFIX)
-            z = (R[a] == 0)
-            n = (R[a] < 0)
+			// Set flags on load (##BUGFIX)
+			z = (R[a] == 0)
+			n = (R[a] < 0)
 		case POP:
 			R[a] = M[(R[b])/4]
 			R[b] += c

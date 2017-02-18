@@ -10,20 +10,32 @@ package main
 import (
 	"Oberon-0-go/OSP"
 	"bufio"
+	"flag"
 	"fmt"
 	"os"
 )
 
+const Ver = "Oberon-0 compiler v0.5-alpha"
+
+func init() {
+	flag.BoolVar(&OSP.Dump, "d", false, "Dump listing output to terminal")
+}
+
 func main() {
 
-	if !(len(os.Args) > 1) {
-		fmt.Printf("Usage: oc <filename.m>\n")
+	fmt.Printf("%s\n\n", Ver)
+
+	// Handle args
+	flag.Parse()
+	// Exit on error
+	if !(len(flag.Args()) > 0) {
+		fmt.Printf("Usage: oc <flags> sourcefile.m\n")
+		flag.PrintDefaults()
 		return
 	}
-	// ##TODO: Add option parsing and set this with -d flag
-	OSP.Dump = true
 
-	filename := os.Args[1]
+	// Compile source file
+	filename := flag.Arg(0)
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Println(err)

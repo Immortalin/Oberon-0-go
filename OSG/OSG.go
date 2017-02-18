@@ -305,8 +305,8 @@ func Index(x *Item, y *Item) {
 		put(ADD, y.r, x.r, y.r)
 		regs[x.r] = false
 		x.r = y.r
-        // ##BUGFIX?
-        //x.A += 1
+		// ##BUGFIX?
+		//x.A += 1
 	}
 	x.Tp = x.Tp.Base
 }
