@@ -12,14 +12,14 @@ Run the Oberon-0 compiler with (copy *.m test cases to the \bin folder):
 
     <go root>\bin> oc Write.m
     
-and so forth, any valid Oberon-0 syntax file as decribed below can be used. The code is still actively being debugged as long as there are open [issues] (https://github.com/tschaer/Oberon-0-go/issues). Some extra output may appear from the compiler.
+and so forth, any valid Oberon-0 syntax file as decribed below can be used. The code is still actively being debugged as long as there are open [issues](https://github.com/tschaer/Oberon-0-go/issues). Some extra output may appear from the compiler.
 
 # Oberon
 The programming language Oberon was conceived by Niklaus Wirth in 1986 as a refinement and extension of his previous languages Pascal and Modula-2. It formed the basis of a complete computer and operating system, a number of which were networked and used at the ETH Zurich in Switzerland for many years.
 
 Oberon-0 is a subset designed to teach compiler construction and defined in Wirth's book _Compiler Construction_ (www.ethoberon.ethz.ch/WirthPubl/CBEAll.pdf), the revised edition from 2005. The source of the compiler is written in the full version of Oberon and designed to run on the ETH Oberon System. To use it today means porting the compiler to a modern, well-supported language.
 
-An [earlier attempt] (https://github.com/tschaer/Oberon-0) used an Oberon-2 compiler, but this proved counterproductive. It turns out that the Go programming language is a descendant of Oberon, thanks to one of Wirth's former students Robert Griesemer, and [described in this talk at GopherCon 2015] (https://www.youtube.com/watch?v=0ReKdcpNyQg). That made it a natural choice for a target language.
+An [earlier attempt](https://github.com/tschaer/Oberon-0) used an Oberon-2 compiler, but this proved counterproductive. It turns out that the Go programming language is a descendant of Oberon, thanks to one of Wirth's former students Robert Griesemer, and [described in this talk at GopherCon 2015](https://www.youtube.com/watch?v=0ReKdcpNyQg). That made it a natural choice for a target language.
 
 ## Differences
 The differences in the two languages were handled as follows:
