@@ -1,5 +1,0 @@
-Todo 17.08.2016
-1. Problem with () in procedure definition. Works fine without.
-2. Command-line options:
-   - set file name
-   - set execution (default is to decode only)
